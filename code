@@ -1,0 +1,639 @@
+1.####Basic Operation on data.csv####
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import plotly.express as px
+
+df = pd.read_csv('titanic.csv')
+
+df.head()
+
+df.tail()
+
+df.shape
+
+df.info()
+
+df.isnull().sum()
+
+df['Age'].dtype
+
+df['Age'] = df['Age'].fillna(np.mean(df['Age']))
+
+df['Cabin'].dtype
+
+df['Cabin'] = df['Cabin'].fillna(df['Cabin'].mode()[0])
+
+df['Embarked']=df['Embarked'].fillna(df['Embarked'].mode()[0])
+
+df.isnull().sum()
+
+df.describe()
+
+df.dtypes
+
+df['Embarked'].value_counts()
+
+from sklearn.preprocessing import LabelEncoder
+label_encoder = LabelEncoder()
+df['Embarked'] = label_encoder.fit_transform(df['Embarked'])
+df
+
+df['Embarked'].value_counts()
+
+
+
+
+2.####Academic Performance####
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+%matplotlib inline 
+import seaborn as sns
+
+df = pd.read_csv('StudentsPerformance.csv')
+
+df.head()
+
+df.tail()
+
+
+df.shape
+
+df.columns
+
+
+df.isnull()
+
+df.isnull().sum()
+
+df.describe()
+
+sns.boxplot(y = df['math score'])
+
+import plotly.express as px
+
+fig = px.box(y = df['reading score'])
+fig.show()
+
+fig = px.box(y = df['reading score'])
+fig.show()
+
+fig = px.box(y = df['writing score'])
+fig.show()
+
+df['test preparation course'].value_counts()
+
+from sklearn.preprocessing import LabelEncoder
+label_encoder = LabelEncoder()
+df['test preparation course'] = label_encoder.fit_transform(df['test preparation course'])
+df
+
+df['race/ethnicity'].value_counts()
+
+from sklearn.preprocessing import LabelEncoder
+label_encoder = LabelEncoder()
+df['race/ethnicity'] = label_encoder.fit_transform(df['race/ethnicity'])
+df
+
+df['parental level of education'].value_counts()
+
+
+
+3.####STATISTICS IRIS AND SOCIAL ADS####
+  import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+%matplotlib inline
+import seaborn as sns
+import plotly.express as px
+
+data = pd.read_csv('iris.csv')
+
+data['species'].value_counts()
+
+data.describe()
+
+data['species'].mode()
+
+data.groupby(['species']).median()
+
+data.groupby(['species']).describe()
+
+data.groupby(['species']).quantile(0.75)
+
+data.groupby(['species']).std()
+
+data.groupby(['species']).var()
+
+d = pd.read_csv('Social_Network_Ads.csv')
+d
+
+
+d.info()
+
+d.isnull().sum()
+
+d.groupby('Gender')['EstimatedSalary'].describe()
+
+from sklearn.preprocessing import LabelEncoder
+label_encoder=LabelEncoder()
+d['Gender'] = label_encoder.fit_transform(d['Gender'])
+d
+
+
+
+
+
+4.####TITANIC LINEAR REGRESSION####
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import plotly.express as px
+%matplotlib inline
+
+df = pd.read_csv('HousingData.csv')
+df
+
+df.shape
+
+df.isnull().sum()
+
+df['CRIM'].dtype
+
+crim_mean = df['CRIM'].mean()
+df['CRIM'].replace(np.nan, crim_mean, inplace = True)
+print('The mean of CRIM is : ', crim_mean)
+
+mean_zn = df['ZN'].mean()
+df['ZN'].replace(np.nan, mean_zn, inplace = True)
+print('The mean of ZN is : ', mean_zn)
+
+mean_chas = df['CHAS'].mean()
+df['CHAS'].replace(np.nan, mean_chas, inplace = True)
+print('The mean of CHAS is : ', mean_chas)
+
+mean_age = df['AGE'].mean()
+df['AGE'].replace(np.nan, mean_age, inplace = True)
+print('The mean of AGE is : ', mean_age)
+
+mean_indus = df['INDUS'].mean()
+df['INDUS'].replace(np.nan, mean_indus, inplace = True)
+print('The mena of INDUS is : ', mean_indus)
+
+mean_lstat = df['LSTAT'].mean()
+df['LSTAT'].replace(np.nan, mean_lstat, inplace = True)
+print('The mean of LSTAT is : ', mean_lstat)
+
+df.isnull().sum()
+
+df.dtypes
+
+X = df.iloc[:,0:13]
+Y = df.iloc[:, -1]
+
+from sklearn.model_selection import train_test_split
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.20, random_state=42 )
+
+from sklearn.linear_model import LinearRegression
+clf = LinearRegression()
+clf.fit(X_train, Y_train)
+clf.score(X_test, Y_test)
+
+
+
+5.####SOCIAL_NETWORK_ADS LOGISTIC REGRESSION####
+
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+
+df = pd.read_csv('datasets/Social_Network_Ads.csv')
+df
+
+df.isnull().sum()
+
+df.drop(['User ID'],axis=1,inplace=True)
+
+df = df.replace("Female",0)
+df = df.replace("Male",1)
+df
+
+df.Purchased.value_counts()
+
+corr = df.corr()
+plt.figure(figsize=(4,4))
+sns.heatmap(corr, annot=True, cmap='Blues')
+
+X= df.drop(['Purchased'],axis=1)
+Y= df['Purchased']
+X.head()
+
+# Normalize the data using Min Max Normalization or any other technique
+from sklearn.preprocessing import StandardScaler
+scaler = StandardScaler()
+
+X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.2, random_state = 42)
+X_scaled= scaler.fit_transform(X_train)
+x_scaled_test= scaler.fit_transform(X_test)
+print("Training and testing split was successful.")
+
+model= LogisticRegression()
+model.fit(X_scaled,y_train)
+y_predict= model.predict(x_scaled_test)
+print("accuracy:", model.score(x_scaled_test,y_test)*100)
+
+from sklearn.metrics import confusion_matrix
+cm= confusion_matrix(y_test,y_predict)
+print(cm)
+
+from sklearn.metrics import precision_recall_fscore_support
+prf= precision_recall_fscore_support(y_test,y_predict)
+print('precision:',prf[0])
+print('Recall:',prf[1])
+print('fscore:',prf[2])
+print('support:',prf[3])
+
+from sklearn.metrics import classification_report
+cr= classification_report(y_test,y_predict)
+print(cr)
+
+custom_input = [[1, 20, 20000]]
+
+campaign = scaler.transform(custom_input)
+
+custom_predictions = model.predict(campaign)
+print(custom_predictions)
+
+
+
+6.####NAIVE BAYERS####
+
+  
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+import matplotlib.pyplot as plt
+
+df = pd.read_csv('datasets/iris.csv')
+df
+
+# Split the dataset into features (X) and target variable (y)
+X = df.drop('species', axis=1)
+y = df['species']
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+
+# Initialize and train the Naïve Bayes classifier
+nb_classifier = GaussianNB()
+nb_classifier.fit(X_train, y_train)
+
+# Predict on the testing set
+y_pred = nb_classifier.predict(X_test)
+
+# Calculate accuracy
+accuracy = accuracy_score(y_test, y_pred)
+print("Accuracy:", accuracy)
+
+# Print classification report
+print("Classification Report:")
+print(classification_report(y_test, y_pred))
+
+# Print confusion matrix
+print("Confusion Matrix:")
+print(confusion_matrix(y_test, y_pred))
+
+from sklearn.metrics import confusion_matrix, accuracy_score, precision_score, recall_score, ConfusionMatrixDisplay
+
+# Compute confusion matrix
+cm = confusion_matrix(y_test, y_pred)
+
+# Extract TP, FP, TN, FN from confusion matrix
+TP = cm[1, 1]
+FP = cm[0, 1]
+TN = cm[0, 0]
+FN = cm[1, 0]
+
+# Calculate accuracy
+accuracy = accuracy_score(y_test, y_pred)
+
+# Calculate error rate
+error_rate = 1 - accuracy
+
+# Calculate precision
+precision = precision_score(y_test, y_pred, average='weighted')
+
+# Calculate recall
+recall = recall_score(y_test, y_pred, average='weighted')
+
+# Print the results
+print("Confusion Matrix:")
+print(cm)
+print("True Positives (TP):", TP)
+print("False Positives (FP):", FP)
+print("True Negatives (TN):", TN)
+print("False Negatives (FN):", FN)
+print("Accuracy:", accuracy)
+print("Error Rate:", error_rate)
+print("Precision:", precision)
+print("Recall:", recall)
+
+disp = ConfusionMatrixDisplay(confusion_matrix = cm)
+print("Confusion matrix:")
+print(cm)
+disp.plot()
+plt.show()
+
+import numpy as np
+
+# True Positives (TP)
+TP = cm[1, 1]
+
+# True Negatives (TN)
+TN = cm[0, 0] + cm[0, 2] + cm[2, 0] + cm[2, 2]
+
+# False Positives (FP)
+FP = np.sum(cm[:, 1]) - TP
+
+# False Negatives (FN)
+FN = np.sum(cm[1, :]) - TP
+
+# Print the results
+print("True Positives (TP):", TP)
+print("True Negatives (TN):", TN)
+print("False Positives (FP):", FP)
+print("False Negatives (FN):", FN)
+
+
+
+7.####TOKENIZER####
+
+  
+import nltk
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+from nltk.stem import PorterStemmer, WordNetLemmatizer
+from nltk import pos_tag
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+# Download NLTK resources
+nltk.download('punkt')
+nltk.download('stopwords')
+nltk.download('wordnet')
+nltk.download('averaged_perceptron_tagger')
+
+# Load the text from the document
+with open('datasets/nlp_text.txt', 'r') as file:
+    text = file.read()
+
+# Tokenization
+tokens = word_tokenize(text)
+
+# Print results
+print("Tokenization:")
+print(tokens)
+
+# POS Tagging
+pos_tags = pos_tag(tokens)
+
+print("\nPOS Tagging:")
+print(pos_tags)
+
+# Stop words removal
+stop_words = set(stopwords.words('english'))
+filtered_tokens = [word for word in tokens if word.lower() not in stop_words]
+
+print("\nStop Words Removal:")
+print(filtered_tokens)
+
+# Stemming and Lemmatization
+stemmer = PorterStemmer()
+stemmed_tokens = [stemmer.stem(word) for word in filtered_tokens]
+
+print("\nStemming:")
+print(stemmed_tokens)
+
+lemmatizer = WordNetLemmatizer()
+lemmatized_tokens = [lemmatizer.lemmatize(word) for word in filtered_tokens]
+
+print("\nLemmatization:")
+print(lemmatized_tokens)
+
+# Calculate Term Frequency-Inverse Document Frequency (TF-IDF)
+tfidf_vectorizer = TfidfVectorizer()
+tfidf_representation = tfidf_vectorizer.fit_transform([text])
+
+
+print("\nTF-IDF Representation:")
+print(tfidf_representation.toarray())
+
+
+
+
+8.9.####TITANIC DATA VISUALIZATION I & II####
+
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+%matplotlib inline
+import plotly.express as px
+
+df = pd.read_csv('titanic.csv', index_col=0)
+
+df
+
+df.shape
+
+df.describe()
+
+df.isnull().sum()
+
+df['Age'] = df['Age'].fillna(np.mean(df['Age']))
+
+df['Cabin'].value_counts()
+
+df['Cabin'] = df['Cabin'].fillna(df['Cabin'].mode()[0])
+
+df['Embarked'] = df['Embarked'].fillna(df['Embarked'].mode()[0])
+
+df.isnull().sum()
+
+df.columns
+
+sns.countplot(x = df['Survived'])
+
+sns.countplot(x = df['Pclass'])
+
+df['Embarked'].value_counts()
+
+
+sns.countplot(x = df['Embarked'])
+
+sns.scatterplot(df['Age'])
+
+sns.boxplot(x = df['Age'])
+
+sns.catplot(data=df, y='Age', x='Pclass', kind='box' )
+
+sns.histplot(data=df, x='Fare')
+
+sns.boxplot(x=df['Sex'], y=df['Age'], hue=df['Survived'])
+
+
+10.####DATA VISUAL IRIS FLOWER###
+
+  import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+%matplotlib inline
+import seaborn as sns
+import plotly.express as px
+
+df = pd.read_csv('iris.csv')
+
+df
+
+df.head()
+
+df.tail()
+
+df.describe()
+
+df.describe(include = 'object')
+
+df.isnull().sum()
+
+print('\nThe features in the dataset are as follows : ')
+print('1. Sepal length : ',df['sepal_length'].dtype)
+print('2. Sepal width : ',df['sepal_width'].dtype)
+print('3. Petal length : ', df['petal_length'].dtype)
+print('4. Petal width : ', df['petal_width'].dtype)
+print('5. Species : ', df['species'].dtype)
+
+sns.histplot(x = df['sepal_length'], kde=True)
+
+sns.histplot(x=df['sepal_width'], kde=True)
+
+sns.histplot(x=df['petal_length'], kde=True)
+
+sns.histplot(x=df['petal_width'], kde=True)
+
+fig = px.histogram(df['sepal_length'])
+fig.show()
+
+fig = px.histogram(df['sepal_width'])
+fig.show()
+
+fig = px.histogram(df['petal_length'])
+fig.show()
+
+fig = px.histogram(df['petal_width'])
+fig.show()
+
+fig = px.box(df['sepal_length'])
+fig.show()
+
+fig = px.box(df['sepal_width'])
+fig.show()
+
+fig = px.box(df['petal_length'])
+fig.show()
+
+fig = px.box(df['petal_width'])
+fig.show()
+
+fig = px.box(df, y='species', x='sepal_length', color='species')
+fig.show()
+
+fig = px.box(df, x='petal_length', y='species', color='species')
+fig.show()
+
+
+
+####IMPALA####
+
+  
+impala-shell
+
+
+
+CREATE DATABASE sample_db;
+
+
+
+USE sample_db;
+
+
+
+-- Creating a table to store employee data
+CREATE TABLE employees (
+    id INT,
+    name STRING,
+    age INT,
+    department STRING
+);
+
+-- Creating a table to store department data
+CREATE TABLE departments (
+    id INT,
+    name STRING
+);
+
+
+
+-- Inserting data into the employees table
+INSERT INTO employees VALUES
+    (1, 'John Doe', 30, 'Engineering'),
+    (2, 'Jane Smith', 28, 'Marketing'),
+    (3, 'Alice Johnson', 35, 'HR');
+
+-- Inserting data into the departments table
+INSERT INTO departments VALUES
+    (1, 'Engineering'),
+    (2, 'Marketing'),
+    (3, 'HR');
+
+
+
+
+
+
+
+-- Querying all employees
+SELECT * FROM employees;
+
+-- Querying employees in the Engineering department
+SELECT * FROM employees WHERE department = 'Engineering';
+
+-- Joining tables to get department names for each employee
+SELECT e.name AS employee_name, d.name AS department_name
+FROM employees e
+JOIN departments d
+ON e.department = d.name;
+
+
+
+
+
+
+quit;
+
+  
+
+  
+
+
+
+
